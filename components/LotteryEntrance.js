@@ -13,7 +13,7 @@ export default function LotteryEntrance() {
     //let fee = ""; can not do this, because when we update fee , it will not trigger a re-render--> that is why we use use-state
     const [fee, setFee] = useState("0")
     const [players, setplayers] = useState("0")
-    const [winner, setwinner] = useState("")
+    const [winner, setwinner] = useState("0")
     const { chainId: chainIdHex, isWeb3Enabled } = useMoralis()
     const chainId = parseInt(chainIdHex)
     const raffleAddress = chainId in contractAddresses ? contractAddresses[chainId][0] : null
@@ -95,6 +95,8 @@ export default function LotteryEntrance() {
                     <button
                         onClick={async () =>
                             await enterRaffle({
+                                //note that this does not automatically updat the winner, becuase success if tied to enter raffle,
+                                //we need to tie a listner to listen for the winner event so we can trigger a re-render
                                 // onComplete:
                                 // onError:
                                 onSuccess: handleSuccess,
@@ -104,8 +106,8 @@ export default function LotteryEntrance() {
                     >
                         enter raffle
                     </button>
-                    Entrance Fee : {ethers.utils.formatUnits(fee, "ether")} ETH a Number of palyers:
-                    {players}
+                    Entrance Fee : {ethers.utils.formatUnits(fee, "ether")}
+                    ETH a Number of palyers:{players}
                     RecentWinner: {winner}
                 </div>
             ) : (
