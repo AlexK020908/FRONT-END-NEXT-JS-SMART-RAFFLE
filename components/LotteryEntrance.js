@@ -23,7 +23,11 @@ export default function LotteryEntrance() {
     //the reason moralis knows what chain we are on,
     //the header passes all the info about metamask to the moralis provider
     //then the provider in app passes the info down to the whole app
-    const { runContractFunction: enterRaffle } = useWeb3Contract({
+    const {
+        runContractFunction: enterRaffle,
+        isLoading,
+        isFetching,
+    } = useWeb3Contract({
         abi: abi,
         contractAddress: raffleAddress,
         functionName: "enterRaffle",
@@ -89,10 +93,11 @@ export default function LotteryEntrance() {
         updateUi()
     }
     return (
-        <div>
+        <div className="p-5">
             {raffleAddress ? (
                 <div>
                     <button
+                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold rounded p-2 ml-auto"
                         onClick={async () =>
                             await enterRaffle({
                                 //note that this does not automatically updat the winner, becuase success if tied to enter raffle,
@@ -103,12 +108,13 @@ export default function LotteryEntrance() {
                                 onError: (error) => console.log(error),
                             })
                         }
+                        disabled={isLoading || isFetching}
                     >
                         enter raffle
                     </button>
-                    Entrance Fee : {ethers.utils.formatUnits(fee, "ether")}
-                    ETH a Number of palyers:{players}
-                    RecentWinner: {winner}
+                    <div>Entrance Fee : {ethers.utils.formatUnits(fee, "ether")}</div>
+                    <div>ETH a Number of palyers:{players}</div>
+                    <div>RecentWinner: {winner} </div>
                 </div>
             ) : (
                 <div> No raffle Address </div>
